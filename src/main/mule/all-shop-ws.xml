@@ -31,6 +31,20 @@ payload]]></ee:set-payload>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="28f610a0-ca99-4da8-b4da-ad83fcf5b99f" />
 	</flow>
+	<flow name="all-shop-wsFlow" doc:id="416648ee-e87f-4f81-a38c-f7ca62b6a588" >
+		<http:listener doc:name="Listener" doc:id="81723be3-d427-4586-8b01-b6a6b6207b7a" config-ref="HTTP_Listener_config" path="/newBranch"/>
+		<ee:transform doc:name="Transform Message" doc:id="99caa9ca-65e5-4d42-a50d-241391e1f6a3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message" : "Changes done by Tripti"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="320e1869-e64f-472b-b9ff-4608fbdb6ec7" />
+	</flow>
 	<flow name="callGroceryShopApi" doc:id="9670ef08-8d9d-4335-87b7-e2a432df6c14" >
 		<http:listener doc:name="Listener" doc:id="b6d8029e-dde5-419f-873f-ab44dd861eb3" config-ref="HTTP_Listener_config" path="/groceryCustomer"/>
 		<http:request method="GET" doc:name="Request" doc:id="c03042fd-a818-4666-95c8-ff78bd64d7db" url="http://localhost:8083/grocery" />
