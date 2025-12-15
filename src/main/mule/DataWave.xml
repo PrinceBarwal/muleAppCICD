@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="StoreVariables" doc:id="812a9e3a-85fd-4380-a11f-99231f38aa01" >
+		<http:listener doc:name="Listener" doc:id="90dd72ee-61b5-4d8a-bd9e-bb871b20e2fd" config-ref="HTTP_Listener_config" path="/stroeVariable"/>
+		<set-variable value="#[payload.localVar]" doc:name="Set Variable" doc:id="2b583de1-08e9-41f7-8a70-02c6527dc31e" variableName="localVariable"/>
+		<flow-ref doc:name="Flow Reference" doc:id="3c79097b-5bb4-4b4d-b5bf-d99d82966a40" name="globalVariable"/>
+		<logger level="INFO" doc:name="Logger" doc:id="ad7cf919-3928-4cad-85ea-606f9aa09f93" message='#["Local Variable Value " ++ vars.localVariable ++ " Global Variable Value : " ++ vars.globalVariable as String]'/>
+	</flow>
+	<sub-flow name="globalVariable" doc:id="e614834e-c917-4396-8162-2f091bc4b5db" >
+		<set-variable value="#[payload.globalVar]" doc:name="Set Variable" doc:id="1828d4f7-3443-4e8c-9671-34b54b69e532" variableName="globalVariable" />
+	</sub-flow>
+	<flow name="DataWaveFlow" doc:id="e70ef354-7b57-4560-b097-e1c7f1f7d2fb" >
+		<http:listener doc:name="Listener" doc:id="888c1dbb-be03-4298-829d-e412ba985960" config-ref="HTTP_Listener_config" path="/datawave"/>
+		<ee:transform doc:name="Transform Message" doc:id="61350fee-ac62-4ba2-b80d-840603b31198" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="datawave.dwl" variableName="datawave" />
+			</ee:variables>
+		</ee:transform>
+	</flow>
+	<flow name="FuncitoninDataWave" doc:id="c9311f67-7008-4503-94d1-88ee9a3f1f45" >
+		<http:listener doc:name="Listener" doc:id="3859e436-8f42-4c28-be25-08a3cef6907d" config-ref="HTTP_Listener_config" path="/datawavefunction" />
+		<ee:transform doc:name="Transform Message" doc:id="06e25408-754d-4b07-b13c-4083c78b741c" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable resource="filterUtils_2.dwl" variableName="filterUtils_2" />
+			</ee:variables>
+		</ee:transform>
+	</flow>
+</mule>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
+	xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="683ea595-3957-44a2-958a-57c44238c101" >
+		<http:listener-connection host="0.0.0.0" port="8085" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="fcca3853-41d6-4b44-b4a9-7a2031a142a5" basePath="/medical">
+		<http:request-connection host="localhost" port="8081" />
+	</http:request-config>
+	<wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="0384b7c4-d5b7-472d-a9a4-1136ede21104" >
+		<wsc:connection wsdlLocation="http://www.dneonline.com/calculator.asmx?wsdl" service="CustomerAccountService" port="CustomerAccountPort" />
+	</wsc:config>
+	<flow name="callMedicalShopApi" doc:id="25e89aae-1dc2-47f2-8eab-501756853301" >
+		<http:listener doc:name="Listener" doc:id="3fac454a-2402-49ce-8e11-f79ff0f4f85e" config-ref="HTTP_Listener_config" path="/medicalcustomer"/>
+		<http:request method="GET" doc:name="Request" doc:id="bfaecc20-57c8-4805-9adf-1106a432876d" url="http://localhost:8081/medical"/>
+		<ee:transform doc:name="Transform Message" doc:id="f759c26f-7645-4357-a6ab-a40ccca5a760" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="28f610a0-ca99-4da8-b4da-ad83fcf5b99f" />
+	</flow>
+	<flow name="callGroceryShopApi" doc:id="9670ef08-8d9d-4335-87b7-e2a432df6c14" >
+		<http:listener doc:name="Listener" doc:id="b6d8029e-dde5-419f-873f-ab44dd861eb3" config-ref="HTTP_Listener_config" path="/groceryCustomer"/>
+		<http:request method="GET" doc:name="Request" doc:id="c03042fd-a818-4666-95c8-ff78bd64d7db" url="http://localhost:8083/grocery" />
+		<ee:transform doc:name="Transform Message" doc:id="73db3bd7-2314-42b4-b64e-15587f5827cd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="2c15f5fe-4ac9-4b63-8e3f-ee61a633ba9c" />
+	</flow>
+	<flow name="callElectronicShopApi" doc:id="95c696ba-4842-4e4d-afd3-d0eaf904585f" >
+		<http:listener doc:name="Listener" doc:id="dac00b54-473c-40c5-855e-a3527eb6b1fa" config-ref="HTTP_Listener_config" path="/electroniccustomer" />
+		<http:request method="GET" doc:name="Request" doc:id="cfefa1f9-1f17-484a-bdff-c0906ffab547" url="http://localhost:8084/electronic" />
+		<ee:transform doc:name="Transform Message" doc:id="6d2a7f23-13d5-4022-a17b-428615f24327" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="d0185c85-f655-4e31-b73c-87e647a962b9" />
+	</flow>
+	<flow name="callHomeAppliancesApi" doc:id="7c81970d-8490-4bf7-8525-b44602fca328" >
+		<http:listener doc:name="Listener" doc:id="e44eaf95-0ff9-4a07-a71a-4b4ea4ae7fa7" config-ref="HTTP_Listener_config" path="/homeAppliancecustomer" />
+		<ee:transform doc:name="Transform Message" doc:id="3d728131-1781-4e23-82c0-2edc198491b8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="e0f943d0-3c53-4c79-ab1f-597612e36577" />
+	</flow>
+	<flow name="Scatter-GatherDemo" doc:id="0606a70b-f330-42b4-9b29-8a4c994a5ad5" >
+		<http:listener doc:name="Listener" doc:id="be93e991-5175-4b30-a6b0-947cb4da15fa" config-ref="HTTP_Listener_config" path="/setterGetter"/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="308082bd-9212-4408-b85e-0ac6e2b3237e" >
+			<route >
+				<flow-ref doc:name="Flow Reference" doc:id="65ba6efe-92c7-45a4-8a76-1a3cd378f3e8" name="callElectronicShopApi"/>
+			</route>
+			<route >
+				<flow-ref doc:name="Flow Reference" doc:id="76c56b89-5b83-4051-b6bb-81f28f35ec82" name="callGroceryShopApi" />
+			</route>
+			<route >
+				<flow-ref doc:name="Flow Reference" doc:id="c24158ba-41ac-41cb-8ea1-920f51cb5893" name="callMedicalShopApi"/>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="5fc27e26-940e-4df2-9fc2-7e502fb3b2f3">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="6211fa20-41c8-4ce2-b5a1-e1898913ff6c" />
+	</flow>
+	<flow name="ChoiceFlowControl" doc:id="c3d4a152-ddd1-4f05-9127-71a6bde107f6" >
+		<http:listener doc:name="Listener" doc:id="20fe215b-12c7-4784-9fe6-78dd1b100666" config-ref="HTTP_Listener_config" path="/choice"/>
+		<set-variable value="#[attributes.queryParams.name]" doc:name="Set Variable" doc:id="bfbe5aa4-3e93-4ae6-9d9e-6863baf5d5d9" variableName="userInput"/>
+		<choice doc:name="Choice" doc:id="11256fc8-98fa-4f17-beba-9da045d871a4" >
+			<when expression='#[vars.userInput == "medical"]'>
+				<http:request method="GET" doc:name="Request" doc:id="126651ba-59c4-4731-a979-ce1df37a3beb" url="http://localhost:8081/medical"/>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="40d2f661-8136-41a2-a6ac-49bab25b346c" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message" : "Default message is run."
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="ValidateApiRequestBeforeCheck" doc:id="484d5b14-d049-4618-ae1c-d5f5ac8f766a" >
+		<http:listener doc:name="Listener" doc:id="b2be2817-753a-4a22-a856-9e8da147fb3d" config-ref="HTTP_Listener_config" path="/validation" />
+		<set-variable value="#[attributes.queryParams.name]" doc:name="Set Variable" doc:id="fa9a9ff7-5942-4d6b-a33c-c036ab34702a" variableName="userInput" />
+		<validation:is-not-null doc:name="Is not null" doc:id="84564bf8-cab8-4b09-981b-a2de350b7368" value="#[vars.userInput]" message="Please enter name query paramter value."/>
+		<choice doc:name="Choice" doc:id="c1816f70-ad52-4a94-a95e-9c0396fd0558" >
+			<when expression='#[vars.userInput == "medical"]' >
+				<http:request method="GET" doc:name="Request" doc:id="a9176578-46ed-4996-8ec4-88ce81a72588" url="http://localhost:8081/medical" />
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="1955caa0-3420-4162-9fd6-b506501e80c0" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message" : "Default message is run."
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+	
+	
+	<flow name="RoundRobin" doc:id="8a950cb8-133a-414c-8c6d-f340c00e07bc" initialState="stopped">
+  <scheduler doc:name="Scheduler" > <!-- 1 -->
+    <scheduling-strategy >
+      <fixed-frequency frequency="10" timeUnit="SECONDS"/>
+    </scheduling-strategy>
+  </scheduler>
+  <set-payload value="#[[1,2,3,4]]" doc:name="Set Payload" /> <!-- 2 -->
+  <logger level="INFO" doc:name="Logger"
+          category="PAYLOAD BEFORE ROUND ROBIN"
+  	message="#[payload]"/>
+  <round-robin doc:name="Round Robin" >
+    <route > <!-- 3 -->
+      <set-payload value="#[payload - 4]" doc:name="Set Payload" />
+      <logger level="INFO" doc:name="Logger"
+              message="#[%dw 2.0&#10;output application/json&#10;---&#10;{ 'r1' : payload}]"
+	      category="ROUTE 1 PAYLOAD"/>
+    </route>
+    <route > <!-- 4 -->
+      <set-payload value="#[payload + 5]" doc:name="Set Payload" />
+        <logger level="INFO" doc:name="Logger"
+                message="#[%dw 2.0&#10;output application/json&#10;---&#10;{'r2' : payload}]"
+                category="ROUTE 2 PAYLOAD"/>
+    </route>
+  </round-robin>
+  <logger level="INFO" doc:name="Logger"
+           message="#[payload]"
+	   category="PAYLOAD OUTSIDE ROUND ROBIN"/> <!-- 5 -->
+	   
+</flow>
+</mule>
