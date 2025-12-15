@@ -166,4 +166,17 @@ output application/json
 	   category="PAYLOAD OUTSIDE ROUND ROBIN"/> <!-- 5 -->
 	   
 </flow>
+	<flow name="newupdate" doc:id="d6ed1666-e8e6-490e-aba9-40338bc565a4" >
+		<http:listener doc:name="Listener" doc:id="7e4cbe0e-cadb-47b2-af53-cbd089ddc0a1" config-ref="HTTP_Listener_config" path="/newUpdate"/>
+		<ee:transform doc:name="Transform Message" doc:id="5d37a869-5cc0-4f15-a806-a5fa0fab517d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message" : "new changes"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
 </mule>
