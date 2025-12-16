@@ -188,7 +188,7 @@ output application/json
 output application/json
 ---
 {
-	"message" : "new changes"
+	"message" : "new changes by prince"
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
